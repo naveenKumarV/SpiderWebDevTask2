@@ -1,0 +1,28 @@
+#wrapper{
+    width:90%;
+    background-color: #fafafd;
+}
+.box {
+    background:#FFF;
+    margin:40px auto;
+    text-align:center;
+    padding: 20px 30px;
+}
+.effect {
+    position:relative;
+    -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
+#sidebar{
+    border-radius: 5px;
+    border:1px solid #5050fc;
+    display:inline-block;
+}
+#header{
+    text-align: center;
+}
+#content{
+    display:inline-block;
+    padding:10px;
+}
