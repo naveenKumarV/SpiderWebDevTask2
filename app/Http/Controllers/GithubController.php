@@ -92,12 +92,12 @@ class GithubController extends Controller
 
     public function addGithubUser($username,$flag)
     {
+        \DB::statement("SET SESSION time_zone = '+00:00'");
         $b=\DB::select(\DB::raw("SELECT COUNT(username) FROM `github_users` WHERE username = :name"),array('name'=>$username));
         $array = json_decode(json_encode($b), true);
         if($array[0]["COUNT(username)"]>0)
         {
-            $user=GithubUser::where('username','=',$username)->get();
-            var_dump($user);
+            $user=GithubUser::where('username','=',$username)->first();
             if((time()-strtotime($user->updated_at))>3600)
             {
                 $user_info = $this->client->api('user')->show($username);
@@ -107,6 +107,7 @@ class GithubController extends Controller
                 $user->starred_repos=count($this->client->api('user')->starred($username));
                 $user->watch_repos=count($this->client->api('user')->watched($username));
                 $user->save();
+                $user->touch();
             }
         }
         else
@@ -126,7 +127,11 @@ class GithubController extends Controller
         {
             if (!\Auth::guest())
             {
-                $user->searchers()->attach(\Auth::id());
+                $result = \DB::table('github_user_user')->where('user_id','=',\Auth::id())->first();
+                if($result==null)
+                {
+                    $user->searchers()->attach(\Auth::id());
+                }
             }
         }
 
@@ -134,23 +139,49 @@ class GithubController extends Controller
 
     public function addRepo($username,$repo_name,$flag)
     {
-        $repo = $this->client->api('repo')->show($username,$repo_name);
-        $repository = new Repository;
-        $repository->name = $repo['name'];
-        $repository->repo_created_at = date("Y-m-d H:i:s", strtotime($repo['created_at']));
-        $repository->description = $repo['description'];
-        $repository->commit_count = count($this->client->api('repo')->commits()->all($username, $repo['name'], array('sha' => 'master')));
-        $repository->languages = serialize(array_keys($this->client->api('repo')->languages($username, $repo['name'])));
-        $repository->forks_count = $repo['forks_count'];
-        $repository->watchers_count = $repo['watchers_count'];
-        $repository->subscribers_count=$repo['subscribers_count'];
-        $repository->github_user_id = intval(GithubUser::where('username', '=', $username)->get(array('id')));
-        $repository->save();
+        \DB::statement("SET SESSION time_zone = '+00:00'");
+        $b=\DB::select(\DB::raw("SELECT COUNT(name) FROM `repositories` WHERE name = :name"),array('name'=>$repo_name));
+        $array = json_decode(json_encode($b), true);
+        if($array[0]["COUNT(name)"]>0)
+        {
+            $repository = Repository::where('name', '=', $repo_name)->first();
+            if((time()-strtotime($repository->updated_at))>3600)
+            {
+                $repo = $this->client->api('repo')->show($username,$repo_name);
+                $repository->description = $repo['description'];
+                $repository->commit_count = count($this->client->api('repo')->commits()->all($username, $repo['name'], array('sha' => 'master')));
+                $repository->languages = serialize(array_keys($this->client->api('repo')->languages($username, $repo['name'])));
+                $repository->forks_count = $repo['forks_count'];
+                $repository->watchers_count = $repo['watchers_count'];
+                $repository->subscribers_count=$repo['subscribers_count'];
+                $repository->save();
+                $repository->touch();
+            }
+        }
+        else
+        {
+            $repo = $this->client->api('repo')->show($username,$repo_name);
+            $repository = new Repository;
+            $repository->name = $repo['name'];
+            $repository->repo_created_at = date("Y-m-d H:i:s", strtotime($repo['created_at']));
+            $repository->description = $repo['description'];
+            $repository->commit_count = count($this->client->api('repo')->commits()->all($username, $repo['name'], array('sha' => 'master')));
+            $repository->languages = serialize(array_keys($this->client->api('repo')->languages($username, $repo['name'])));
+            $repository->forks_count = $repo['forks_count'];
+            $repository->watchers_count = $repo['watchers_count'];
+            $repository->subscribers_count=$repo['subscribers_count'];
+            $repository->github_user_id = intval(GithubUser::where('username', '=', $username)->pluck('id'));
+            $repository->save();
+        }
         if($flag)
         {
             if (!\Auth::guest())
             {
-                $repository->searchers()->attach(\Auth::id());
+                $result = \DB::table('repository_user')->where('user_id','=',\Auth::id())->first();
+                if($result==null)
+                {
+                    $repository->searchers()->attach(\Auth::id());
+                }
             }
         }
     }
@@ -190,23 +221,10 @@ class GithubController extends Controller
         $username=$request->get('username');
         $repo_name=$request->get('repo');
         try {
+            $this->addGithubUser($username,false);
             $this->addRepo($username,$repo_name,true);
             $repo = Repository::where('name','=',$repo_name)->get()->toArray();
-            /*
-             $repo['languages'] = $this->client->api('repo')->languages($username, $repo_name);
-             $repo['languages'] = array_keys($repo['languages']);
-             $commits = $this->client->api('repo')->commits()->all($username, $repo_name, array('sha' => 'master'));
-             $repo['commit_count']=count($commits);
-             $repo_info = $this->client->api('repo')->show($username,$repo_name);
-             $repo['description']=$repo_info['description'];
-             $repo['watchers_count']=$repo_info['watchers_count'];
-             $repo['forks_count']=$repo_info['forks_count'];
-             $repo['subscribers_count']=$repo_info['subscribers_count'];
-             $repo['created_at']=strtotime($repo_info['created_at']);
-             $repo['contributors'] = $this->client->api('repo')->contributors($username,$repo_name);
-             $repo['issues_count']= $repo_info['open_issues_count'];
-            */
-            return view('github.repo_info',compact('repo','username','repo_info'));
+            return view('github.repo_info',compact('repo','username'));
         } catch (\RuntimeException $e) {
             $this->handleAPIException($e);
         }

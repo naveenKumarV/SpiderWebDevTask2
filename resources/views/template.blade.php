@@ -5,6 +5,7 @@
     @yield('include')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    @yield('graph_header')
 @stop
 
 @section('content')
@@ -17,7 +18,10 @@
                     @if(Auth::guest())
                         Hi User, You are not signed in.
                     @else
-                        Hi {{-- $first_name --}}
+                        <?php
+                        $current_user = Auth::user();
+                        echo 'Hi '.$current_user->first_name.' '.$current_user->last_name;
+                        ?>
                     @endif
                 </a>
             </div>
@@ -34,13 +38,13 @@
             <div class="col-md-3">
                 <ul  id="sidebar" class="nav nav-pills nav-stacked" style="max-width: 200px;">
                     <li><a href="{{ url('/') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                    <li><a href="{{ url('github/search_repos') }}"><span class="glyphicon glyphicon-search"></span> Search Repositories By keyword</a></li>
-                    <li><a href="{{ url('github/repo_info') }}"><span class="glyphicon glyphicon-info-sign"></span> Repository Information</a></li>
-                    <li><a href="{{ url('github/search_user_repos') }}"><span class="glyphicon glyphicon-search"></span> Search Repositories of a Github User</a></li>
-                    <li><a href="{{ url('github/user_info') }}"><span class="glyphicon  glyphicon-user "></span> Github User Information</a></li>
-                    <li><a href="{{ url('github') }}"><span class="glyphicon glyphicon-list"></span>  Schedule</a></li>
-                    <li><a href="{{ url('github/repo_stats') }}"><span class="glyphicon glyphicon-signal"></span>  Statistics for Repository</a></li>
-                    <li><a href="{{ url('github/search_user_repos') }}"><span class="glyphicon glyphicon-stats"></span>  Statistics for Github User</a></li>
+                    <li><a href="{{ url('github/repo/search') }}"><span class="glyphicon glyphicon-search"></span> Search Repositories By keyword</a></li>
+                    <li><a href="{{ url('github/repo/info') }}"><span class="glyphicon glyphicon-info-sign"></span> Repository Information</a></li>
+                    <li><a href="{{ url('github/user/repos/search') }}"><span class="glyphicon glyphicon-search"></span> Search Repositories of a Github User</a></li>
+                    <li><a href="{{ url('github/user/info') }}"><span class="glyphicon  glyphicon-user "></span> Github User Information</a></li>
+                    <li><a href="{{ url('github/statistics') }}"><span class="glyphicon glyphicon-list"></span>  Schedule</a></li>
+                    <li><a href="{{ url('github/repo/statistics') }}"><span class="glyphicon glyphicon-signal"></span>  Statistics for Repository</a></li>
+                    <li><a href="{{ url('github/user/statistics') }}"><span class="glyphicon glyphicon-stats"></span>  Statistics for Github User</a></li>
                 </ul>
             </div>
             <div id="content" class="col-md-8">
