@@ -31,7 +31,6 @@ class GithubController extends Controller
     public function __construct(\Github\Client $client)
     {
         $this->client = $client;
-        $this->username = env('GITHUB_USERNAME');
     }
 
     public function statistics()
@@ -127,7 +126,8 @@ class GithubController extends Controller
         {
             if (!\Auth::guest())
             {
-                $result = \DB::table('github_user_user')->where('user_id','=',\Auth::id())->first();
+                $result = \DB::table('github_user_user')->where('user_id','=',\Auth::id())
+                    ->where('github_user_id','=',$user->id)->first();
                 if($result==null)
                 {
                     $user->searchers()->attach(\Auth::id());
@@ -149,8 +149,19 @@ class GithubController extends Controller
             {
                 $repo = $this->client->api('repo')->show($username,$repo_name);
                 $repository->description = $repo['description'];
-                $repository->commit_count = count($this->client->api('repo')->commits()->all($username, $repo['name'], array('sha' => 'master')));
+                $commits=$this->client->api('repo')->commits()->all($username, $repo['name'], array('sha' => 'master'));
+                $commit_dates = [];
+                foreach($commits as $commit)
+                {
+                    array_push($commit_dates,date("Y-m-d", strtotime($commit['commit']['author']['date'])));
+                }
+                $repository->commit_dates = serialize($commit_dates);
                 $repository->languages = serialize(array_keys($this->client->api('repo')->languages($username, $repo['name'])));
+                if(array_key_exists('source',$repo))
+                {
+                    $repository->forks_count = $repo['source']['forks_count'];
+                    $repository->watchers_count = $repo['source']['watchers_count'];
+                }
                 $repository->forks_count = $repo['forks_count'];
                 $repository->watchers_count = $repo['watchers_count'];
                 $repository->subscribers_count=$repo['subscribers_count'];
@@ -165,8 +176,19 @@ class GithubController extends Controller
             $repository->name = $repo['name'];
             $repository->repo_created_at = date("Y-m-d H:i:s", strtotime($repo['created_at']));
             $repository->description = $repo['description'];
-            $repository->commit_count = count($this->client->api('repo')->commits()->all($username, $repo['name'], array('sha' => 'master')));
+            $commits=$this->client->api('repo')->commits()->all($username, $repo['name'], array('sha' => 'master'));
+            $commit_dates = [];
+            foreach($commits as $commit)
+            {
+                array_push($commit_dates,date("Y-m-d", strtotime($commit['commit']['author']['date'])));
+            }
+            $repository->commit_dates = serialize($commit_dates);
             $repository->languages = serialize(array_keys($this->client->api('repo')->languages($username, $repo['name'])));
+            if(array_key_exists('source',$repo))
+            {
+                $repository->forks_count = $repo['source']['forks_count'];
+                $repository->watchers_count = $repo['source']['watchers_count'];
+            }
             $repository->forks_count = $repo['forks_count'];
             $repository->watchers_count = $repo['watchers_count'];
             $repository->subscribers_count=$repo['subscribers_count'];
@@ -177,7 +199,8 @@ class GithubController extends Controller
         {
             if (!\Auth::guest())
             {
-                $result = \DB::table('repository_user')->where('user_id','=',\Auth::id())->first();
+                $result = \DB::table('repository_user')->where('user_id','=',\Auth::id())
+                    ->where('repository_id','=',$repository->id)->first();
                 if($result==null)
                 {
                     $repository->searchers()->attach(\Auth::id());
@@ -232,14 +255,54 @@ class GithubController extends Controller
 
     public function searchRepos(Request $request)
     {
+        $this->validate($request,['repo'=>'required|min:4']);
+        $repo_name=$request->get('repo');
         try {
-            $this->validate($request,['repo'=>'required|min:4']);
-            $repo_name=$request->get('repo');
             $repos = $this->client->api('repo')->find($repo_name);
             return view('github.search_repos',compact('repos'));
         } catch (\RuntimeException $e) {
             $this->handleAPIException($e);
         }
+    }
+
+    public function repoStatistics(Request $request)
+    {
+        $this->validate($request,['username'=>'required','repo'=>'required']);
+        $username=$request->get('username');
+        $repo_name=$request->get('repo');
+        try{
+            $this->addGithubUser($username,false);
+            $this->addRepo($username,$repo_name,true);
+            $repo = Repository::where('name','=',$repo_name)->first();
+            $commit_dates = unserialize($repo->commit_dates);
+            $frequency = array_count_values($commit_dates);
+            $area_chart = new Lavacharts;
+            $table = $area_chart->DataTable();
+            $table->addDateColumn('Date')->addNumberColumn('Number of Commits');
+            foreach($frequency as $key=>$value)
+            {
+                $table->addRow(array($key,intval($value)));
+            }
+            $area_chart->AreaChart('Activity')->setOptions(array(
+                'datatable' => $table,
+                'title' => 'Repository Activity based on number of commits',
+                'legend' => $area_chart->Legend(array(
+                    'position' => 'in'))));
+            return view('github.repo_statistics',compact('area_chart' ));
+        }catch (\RuntimeException $e) {
+            $this->handleAPIException($e);
+        }
+    }
+
+    public function history()
+    {
+        if(!\Auth::guest())
+        {
+            $searched_repos = \Auth::user()->searchedRepos->lists('name')->toArray();
+            $searched_users = \Auth::user()->searchedUsers->lists('username')->toArray();
+            return view('github.previous_searches',compact('searched_repos','searched_users'));
+        }
+        return view('github.previous_searches');
     }
 
     public function handleAPIException($e)
