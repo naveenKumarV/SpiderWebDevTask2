@@ -32,4 +32,20 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function searchedRepos()
+    {
+        return $this->belongsToMany('App\Repository','repository_user')->withTimestamps();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function searchedUsers()
+    {
+        return $this->belongsToMany('App\GithubUser','github_user_user')->withTimestamps();
+    }
 }

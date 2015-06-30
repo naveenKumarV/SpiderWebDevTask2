@@ -28,72 +28,123 @@ class GithubController extends Controller
      * */
     private $username;
 
+    /**
+     * Constructor
+     *
+     * @param \Github\Client $client
+     */
     public function __construct(\Github\Client $client)
     {
         $this->client = $client;
     }
 
-    public function statistics()
+    public function addLanguage($language)
     {
-        try
+        \DB::statement("SET SESSION time_zone = '+00:00'");
+        $b=\DB::select(\DB::raw("SELECT COUNT(id) FROM `github_languages_statistics` WHERE language = :name"),array('name'=>$language));
+        $array = json_decode(json_encode($b), true);
+        if($array[0]["COUNT(id)"]>0)
         {
-            \DB::statement("SET SESSION time_zone = '+00:00'");
-            $b=\DB::select(\DB::raw("SELECT COUNT(id) FROM `github_languages_statistics`"));
-            $array = json_decode(json_encode($b), true);
-            if($array[0]["COUNT(id)"]>0)
+            $lan = GithubLanguagesStatistics::where('language', '=', $language)->first();
+            if ((time() - strtotime($lan->updated_at)) > 3600)
             {
-
-                if((time()-strtotime(GithubLanguagesStatistics::find(1)->updated_at))<3600)
-                {
-                    $flag=false;
-                }
-                else
-                {
-                    $flag=true;
-                    GithubLanguagesStatistics::truncate();
-                }
+                $url = 'search/repositories?q=language:'.$language;
+                $response = $this->client->getHttpClient()->get($url);
+                $repos = \Github\HttpClient\Message\ResponseMediator::getContent($response);
+                $lan->no_of_repositories = $repos['total_count'];
+                $lan->save();
+                $lan->touch();
             }
-            else
-            {
-                $flag=true;
-            }
-            if($flag)
-            {
-                $languages=['C','C++','C#','CSS','Java','JavaScript','PHP','Python','Ruby','Shell'];
-                foreach($languages as $language)
-                {
-                    $statistics = new GithubLanguagesStatistics;
-                    $statistics->language = $language;
-                    $url='search/repositories?q=language:'.$language;
-                    $response = $this->client->getHttpClient()->get($url);
-                    $repos    = \Github\HttpClient\Message\ResponseMediator::getContent($response);
-                    $statistics->no_of_repositories = $repos['total_count'];
-                    $statistics->save();
-                }
-            }
-            $statistics = GithubLanguagesStatistics::get(array('language','no_of_repositories'))->toArray();
+        }
+        else
+        {
+            $statistics = new GithubLanguagesStatistics;
+            $statistics->language = $language;
+            $url = 'search/repositories?q=language:'.$language;
+            $response = $this->client->getHttpClient()->get($url);
+            $repos = \Github\HttpClient\Message\ResponseMediator::getContent($response);
+            $statistics->no_of_repositories = $repos['total_count'];
+            $statistics->save();
+        }
+    }
 
-            $lava = new Lavacharts;
-            $table  = $lava->DataTable();
-            $table->addStringColumn('language')->addNumberColumn('Repositories');
-            foreach($statistics as $data)
-            {
-                $table->addRow(array($data['language'],intval($data['no_of_repositories'])));
-            }
-            $lava->BarChart('Repositories')->setOptions(array('datatable' => $table));
+    /**
+     * gives the language statistics
+     *
+     * @return \Illuminate\View\View
+     */
 
-            return view('github.statistics',compact('lava'));
+    public function languageStats($language=null)
+    {
+        $languages=['CSS','Java','JavaScript','PHP','Python','Ruby'];
+        if($language!=null)
+        {
+            array_push($languages,$language);
+        }
+        $statistics = [];
+        foreach($languages as $language)
+        {
+            $this->addLanguage($language);
+            array_push($statistics, GithubLanguagesStatistics::where('language', '=', $language)->get()->toArray());
+        }
+        array_pop($languages);
+        $lava = new Lavacharts;
+        $table  = $lava->DataTable();
+        $table->addStringColumn('language')->addNumberColumn('Repositories');
+        foreach($statistics as $data)
+        {
+            $table->addRow(array($data[0]['language'],intval($data[0]['no_of_repositories'])));
+        }
+        $lava->BarChart('Repositories')->setOptions(array('datatable' => $table));
+        return $lava;
+    }
 
+    /**
+     * gives the statistics of top 6 popular languages
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showLanguages()
+    {
+        try {
+            $compare = false;
+            $lava = $this->languageStats();
+            return view('github.statistics',compact('lava','compare'));
         } catch (\RuntimeException $e) {
             $this->handleAPIException($e);
         }
     }
 
+    /**
+     * adds a language to compare
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
+    public function compareLanguage(Request $request)
+    {
+        try {
+            $compare = true;
+            $this->validate($request, ['language' => 'required|in:C,shell,csharp,matlab,perl,objectivec,cpp']);
+            $lava = $this->languageStats($request->get('language'));
+            return view('github.statistics', compact('lava', 'compare'));
+        }catch (\RuntimeException $e) {
+            $this->handleAPIException($e);
+        }
+    }
+
+    /**
+     * adds the github user information to 'github_users' table in the database
+     *
+     *
+     * @param $username
+     * @param $flag
+     */
     public function addGithubUser($username,$flag)
     {
         \DB::statement("SET SESSION time_zone = '+00:00'");
-        $b=\DB::select(\DB::raw("SELECT COUNT(username) FROM `github_users` WHERE username = :name"),array('name'=>$username));
-        $array = json_decode(json_encode($b), true);
+        $array=\DB::select(\DB::raw("SELECT COUNT(username) FROM `github_users` WHERE username = :name"),array('name'=>$username));
+        $array = json_decode(json_encode($array), true);
         if($array[0]["COUNT(username)"]>0)
         {
             $user=GithubUser::where('username','=',$username)->first();
@@ -137,11 +188,18 @@ class GithubController extends Controller
 
     }
 
+    /**
+     * adds the information of a repository to the 'repositories' table in the database
+     *
+     * @param $username
+     * @param $repo_name
+     * @param $flag
+     */
     public function addRepo($username,$repo_name,$flag)
     {
         \DB::statement("SET SESSION time_zone = '+00:00'");
-        $b=\DB::select(\DB::raw("SELECT COUNT(name) FROM `repositories` WHERE name = :name"),array('name'=>$repo_name));
-        $array = json_decode(json_encode($b), true);
+        $array=\DB::select(\DB::raw("SELECT COUNT(name) FROM `repositories` WHERE name = :name"),array('name'=>$repo_name));
+        $array = json_decode(json_encode($array), true);
         if($array[0]["COUNT(name)"]>0)
         {
             $repository = Repository::where('name', '=', $repo_name)->first();
@@ -209,7 +267,13 @@ class GithubController extends Controller
         }
     }
 
-    public function searchUserRepos(Request $request)      //what if two users search for the same user
+    /**
+     * gives the repositories of a github user
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
+    public function searchUserRepos(Request $request)
     {
         $this->validate($request,['username'=>'required']);
         $username=$request->get('username');
@@ -225,6 +289,12 @@ class GithubController extends Controller
         }
     }
 
+    /**
+     * gives the information about a github user
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
     public function userInfo(Request $request)
     {
         $this->validate($request,['username'=>'required']);
@@ -238,6 +308,12 @@ class GithubController extends Controller
         }
     }
 
+    /**
+     * Gets the repository information
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
     public function repoInfo(Request $request)
     {
         $this->validate($request,['username'=>'required','repo'=>'required']);
@@ -253,6 +329,12 @@ class GithubController extends Controller
         }
     }
 
+    /**
+     * Searches repository by keyword
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
     public function searchRepos(Request $request)
     {
         $this->validate($request,['repo'=>'required|min:4']);
@@ -265,6 +347,12 @@ class GithubController extends Controller
         }
     }
 
+    /**
+     * gives the activity graph of a repository based on number of commits
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
     public function repoStatistics(Request $request)
     {
         $this->validate($request,['username'=>'required','repo'=>'required']);
@@ -294,6 +382,11 @@ class GithubController extends Controller
         }
     }
 
+    /**
+     * Gives the previous searches of the currently logged in user
+     *
+     * @return \Illuminate\View\View
+     */
     public function history()
     {
         if(!\Auth::guest())
@@ -305,6 +398,11 @@ class GithubController extends Controller
         return view('github.previous_searches');
     }
 
+    /**
+     * handles API exceptions
+     *
+     * @param $e
+     */
     public function handleAPIException($e)
     {
         dd($e->getCode() . ' - ' . $e->getMessage());
