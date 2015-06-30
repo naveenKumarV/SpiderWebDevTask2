@@ -14,9 +14,9 @@ class CreateGithubUserUserTable extends Migration
     {
         Schema::create('github_user_user', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('search_id')->unsigned()->index()->nullable(false);
+            $table->integer('user_id')->unsigned()->index()->nullable(false);
             $table->integer('github_user_id')->unsigned()->index()->nullable(false);
-            $table->foreign('search_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('github_user_id')->references('id')->on('github_users')->onDelete('cascade');
             $table->timestamps();
         });

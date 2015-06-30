@@ -17,8 +17,8 @@ class CreateGithubUsersTable extends Migration
             $table->string('username')->index()->unique()->nullable(false);
             $table->timestamp('account_created_at')->nullable(false);
             $table->integer('repos')->nullable()->unsigned();
-            $table->text('followers')->nullable();
-            $table->text('following')->nullable();
+            $table->integer('followers')->nullable();
+            $table->integer('following')->nullable();
             $table->integer('starred_repos')->nullable()->unsigned();
             $table->integer('watch_repos')->nullable()->unsigned();
             $table->timestamps();

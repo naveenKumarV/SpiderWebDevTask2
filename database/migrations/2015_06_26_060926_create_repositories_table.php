@@ -17,16 +17,13 @@ class CreateRepositoriesTable extends Migration
             $table->string('name')->index()->unique()->nullable(false);
             $table->timestamp('repo_created_at')->nullable(false);
             $table->text('description')->nullable();
-            $table->string('url')->nullable(false);
-            $table->string('languages')->nullable();
-            $table->integer('subscribers_count')->nullable();
+            $table->text('languages')->nullable();
+            $table->text('commit_dates')->nullable();
             $table->integer('forks_count')->nullable();
             $table->integer('watchers_count')->nullable();
-            $table->text('collaborators')->nullable();
-            $table->text('contributors')->nullable();
-            $table->integer('user_id')->nullable(false)->unsigned();
+            $table->integer('subscribers_count')->nullable();
+            $table->integer('github_user_id')->nullable(false)->unsigned();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('github_users');
         });
     }
 

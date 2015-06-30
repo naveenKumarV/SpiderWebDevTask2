@@ -14,10 +14,10 @@ class CreateRepositoryUserTable extends Migration
     {
         Schema::create('repository_user', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('search_id')->unsigned()->index()->nullable(false);
-            $table->integer('repo_id')->unsigned()->index()->nullable(false);
-            $table->foreign('search_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('repo_id')->references('id')->on('repositories')->onDelete('cascade');
+            $table->integer('user_id')->unsigned()->index()->nullable(false);
+            $table->integer('repository_id')->unsigned()->index()->nullable(false);
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('repository_id')->references('id')->on('repositories')->onDelete('cascade');
             $table->timestamps();
         });
     }
