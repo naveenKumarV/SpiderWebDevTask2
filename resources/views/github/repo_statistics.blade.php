@@ -18,7 +18,7 @@
         {!! Form::text('repo',null,['class'=>'form-control']) !!}
     </div>
     <div class="form-group">
-        {!! Form::submit('Display information',['class'=>'btn btn-primary form-control']) !!}
+        {!! Form::submit('Display Activity',['class'=>'btn btn-primary form-control']) !!}
     </div>
     {!! Form::close() !!}
     @include('errors.list')
