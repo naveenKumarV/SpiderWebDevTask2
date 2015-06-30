@@ -51,5 +51,9 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
+$app->singleton('Github\Client', function(){
+  $client = new Github\Client();
 
+  return $client;
+});
 return $app;

@@ -12,8 +12,8 @@
             Please login to save and see your previous searches.
         @else
             @if(isset($searched_repos) && isset($searched_users))
+                <h4>Previously searched repositories</h4>
                 @if(count($searched_repos)>0)
-                    <h4>Previously searched repositories</h4>
                     <ul>
                         @foreach($searched_repos as $repo)
                             <li>{{ $repo }}</li>
@@ -23,8 +23,8 @@
                     No previous recorded searches.
                 @endif
 
+                <h4>Previously searched Github Users</h4>
                 @if(count($searched_users)>0)
-                    <h4>Previously searched Github Users</h4>
                     <ul>
                         @foreach($searched_users as $user)
                             <li>{{ $user }}</li>

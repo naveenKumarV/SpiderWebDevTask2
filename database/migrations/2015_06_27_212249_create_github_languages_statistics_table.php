@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGithubLanguagesStatistics extends Migration
+class CreateGithubLanguagesStatisticsTable extends Migration
 {
     /**
      * Run the migrations.

@@ -23,12 +23,10 @@
     {!! Form::open() !!}
     <div class="form-group">
         <label class="radio-inline"><input type="radio" name="language" value="C">C</label>
-        <label class="radio-inline"><input type="radio" name="language" value="shell">Shell</label>
         <label class="radio-inline"><input type="radio" name="language" value="csharp">C#</label>
-        <label class="radio-inline"><input type="radio" name="language" value="matlab">MATLAB</label>
-        <label class="radio-inline"><input type="radio" name="language" value="perl">Perl</label>
         <label class="radio-inline"><input type="radio" name="language" value="objectivec">Objective-C</label>
         <label class="radio-inline"><input type="radio" name="language" value="cpp">C++</label>
+        <label class="radio-inline"><input type="radio" name="language" value="CSS">CSS</label>
     </div>
     <div style="width: 130px;margin: 10px auto;">
         {!! Form::submit('Add Language',['class'=>'btn btn-primary form-control']) !!}

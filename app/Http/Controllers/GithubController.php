@@ -81,7 +81,7 @@ class GithubController extends Controller
 
     public function languageStats($language=null)
     {
-        $languages=['CSS','Java','JavaScript','PHP','Python','Ruby'];
+        $languages=['Java','JavaScript','PHP','Python','Ruby'];
         if($language!=null)
         {
             array_push($languages,$language);
@@ -105,7 +105,7 @@ class GithubController extends Controller
     }
 
     /**
-     * gives the statistics of top 6 popular languages
+     * gives the statistics of top 5 popular languages
      *
      * @return \Illuminate\View\View
      */
@@ -130,7 +130,7 @@ class GithubController extends Controller
     {
         try {
             $compare = true;
-            $this->validate($request, ['language' => 'required|in:C,shell,csharp,matlab,perl,objectivec,cpp']);
+            $this->validate($request, ['language' => 'required|in:C,shell,csharp,objectivec,cpp,CSS']);
             $lava = $this->languageStats($request->get('language'));
             return view('github.statistics', compact('lava', 'compare'));
         }catch (\RuntimeException $e) {
