@@ -38,6 +38,11 @@ class GithubController extends Controller
         $this->client = $client;
     }
 
+    /**
+     * adds a language information to the database table
+     *
+     * @param $language
+     */
     public function addLanguage($language)
     {
         \DB::statement("SET SESSION time_zone = '+00:00'");

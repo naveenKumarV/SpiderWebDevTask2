@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ceb62a17-4345-4fa9-94a0-14481975d2fd" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/GithubController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/GithubController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/GithubUser.php" afterPath="$PROJECT_DIR$/app/GithubUser.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Repository.php" afterPath="$PROJECT_DIR$/app/Repository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/User.php" afterPath="$PROJECT_DIR$/app/User.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/routes.php" afterPath="$PROJECT_DIR$/app/Http/routes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SpiderWebDevTask2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,22 +27,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="GithubLanguagesStatistics.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/GithubLanguagesStatistics.php">
+      <file leaf-file-name="GithubController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/GithubController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.064516" vertical-offset="0" max-vertical-offset="456">
-              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="routes.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/Http/routes.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.5" vertical-offset="816" max-vertical-offset="1488">
-              <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="-7.283186" vertical-offset="3261" max-vertical-offset="9912">
+              <caret line="41" column="56" selection-start-line="41" selection-start-column="56" selection-end-line="41" selection-end-column="56" />
+              <folding>
+                <marker date="1435675800482" expanded="true" signature="943:1017" placeholder="SELECT COUNT..." />
+                <marker date="1435675800482" expanded="true" signature="4482:4547" placeholder="SELECT COUNT..." />
+                <marker date="1435675800482" expanded="true" signature="6729:6786" placeholder="SELECT COUNT..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -85,12 +74,12 @@
         <option value="$PROJECT_DIR$/resources/views/template.blade.php" />
         <option value="$PROJECT_DIR$/composer.json" />
         <option value="$PROJECT_DIR$/resources/views/github/search_repos.blade.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/GithubController.php" />
         <option value="$PROJECT_DIR$/app/GithubLanguagesStatistics.php" />
         <option value="$PROJECT_DIR$/app/GithubUser.php" />
         <option value="$PROJECT_DIR$/app/Repository.php" />
         <option value="$PROJECT_DIR$/app/User.php" />
         <option value="$PROJECT_DIR$/app/Http/routes.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/GithubController.php" />
       </list>
     </option>
   </component>
@@ -183,6 +172,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpiderWebDevTask2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SpiderWebDevTask2" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -240,12 +251,12 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="1" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32952693" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32952693" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32952693" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -313,9 +324,9 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="1887" max-vertical-offset="2244">
           <caret line="129" column="0" selection-start-line="129" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
           <folding>
-            <marker date="1435671377841" expanded="true" signature="-1:-1" placeholder="SELECT COUNT..." />
-            <marker date="1435671377841" expanded="true" signature="-1:-1" placeholder="SELECT COUNT..." />
-            <marker date="1435671377841" expanded="true" signature="-1:-1" placeholder="SELECT COUNT..." />
+            <marker date="1435675800482" expanded="true" signature="943:1017" placeholder="SELECT COUNT..." />
+            <marker date="1435675800482" expanded="true" signature="4482:4547" placeholder="SELECT COUNT..." />
+            <marker date="1435675800482" expanded="true" signature="6729:6786" placeholder="SELECT COUNT..." />
           </folding>
         </state>
       </provider>
@@ -573,18 +584,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/GithubController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8584071" vertical-offset="9357" max-vertical-offset="9792">
-          <caret line="410" column="0" selection-start-line="410" selection-start-column="0" selection-end-line="410" selection-end-column="0" />
-          <folding>
-            <marker date="1435671377841" expanded="true" signature="-1:-1" placeholder="SELECT COUNT..." />
-            <marker date="1435671377841" expanded="true" signature="-1:-1" placeholder="SELECT COUNT..." />
-            <marker date="1435671377841" expanded="true" signature="-1:-1" placeholder="SELECT COUNT..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/resources/views/github/search_repos.blade.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5958702" vertical-offset="350" max-vertical-offset="696">
@@ -664,6 +663,18 @@
         <state vertical-scroll-proportion="1.5" vertical-offset="816" max-vertical-offset="1488">
           <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/GithubController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.283186" vertical-offset="3261" max-vertical-offset="9912">
+          <caret line="41" column="56" selection-start-line="41" selection-start-column="56" selection-end-line="41" selection-end-column="56" />
+          <folding>
+            <marker date="1435675800482" expanded="true" signature="943:1017" placeholder="SELECT COUNT..." />
+            <marker date="1435675800482" expanded="true" signature="4482:4547" placeholder="SELECT COUNT..." />
+            <marker date="1435675800482" expanded="true" signature="6729:6786" placeholder="SELECT COUNT..." />
+          </folding>
         </state>
       </provider>
     </entry>
