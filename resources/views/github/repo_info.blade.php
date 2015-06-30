@@ -18,16 +18,33 @@
         {!! Form::submit('Display information',['class'=>'btn btn-primary form-control']) !!}
     </div>
     {!! Form::close() !!}
+    @include('errors.list')
 
     @if(isset($repo))
-        <ul>
+        <ul style="text-align: left;">
+            <?php $repo=$repo[0]; ?>
+            <li>Repository name: {{ $repo['name'] }}</li>
+            <li>Owner name: {{ $username }}</li>
+            <li>Description:
+                @if($repo['description']=='')
+                    none
+                @else
+                    {{ $repo['description'] }}
+                @endif
+            </li>
+
+            <li>Created at: {{ $repo['repo_created_at'] }} </li>
+            <?php $languages = unserialize($repo['languages']); ?>
             <li>Languages:
                 <ol>
-                    @foreach($repo['languages'] as $language)
-                        <li><?php var_dump($language) ?></li>
+                    @foreach($languages as $language)
+                        <li>{{ $language }}</li>
                     @endforeach
                 </ol>
             </li>
+            <li>Number of subscribers: {{ $repo['subscribers_count'] }}</li>
+            <li>Forks count: {{ $repo['forks_count'] }}</li>
+            <li>Number of users watching the repository: {{ $repo['watchers_count'] }}</li>
         </ul>
     @endif
 @stop

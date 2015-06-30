@@ -42,9 +42,9 @@
                     <li><a href="{{ url('github/repo/info') }}"><span class="glyphicon glyphicon-info-sign"></span> Repository Information</a></li>
                     <li><a href="{{ url('github/user/repos/search') }}"><span class="glyphicon glyphicon-search"></span> Search Repositories of a Github User</a></li>
                     <li><a href="{{ url('github/user/info') }}"><span class="glyphicon  glyphicon-user "></span> Github User Information</a></li>
-                    <li><a href="{{ url('github/statistics') }}"><span class="glyphicon glyphicon-list"></span>  Schedule</a></li>
+                    <li><a href="{{ url('github/statistics') }}"><span class="glyphicon glyphicon-stats"></span>  Github Statistics by Language</a></li>
                     <li><a href="{{ url('github/repo/statistics') }}"><span class="glyphicon glyphicon-signal"></span>  Statistics for Repository</a></li>
-                    <li><a href="{{ url('github/user/statistics') }}"><span class="glyphicon glyphicon-stats"></span>  Statistics for Github User</a></li>
+                    <li><a href="{{ url('github/search_history') }}"><span class="glyphicon glyphicon-list"></span>  Your previous searches</a></li>
                 </ul>
             </div>
             <div id="content" class="col-md-8">

@@ -16,17 +16,18 @@
     {!! Form::close() !!}
     @if(isset($repos))
         @if(count($repos))
+            <h3>SEARCH RESULTS</h3>
             <div class="list-group">
                 @foreach($repos as $repo)
-                    <a class="list-group-item" href="/finder?repo={{ $repo['name'] }}">
+                    <a class="list-group-item" href="{{$repo['html_url']}}">
                         <h4 class="list-group-item-heading">{{ $repo['name'] }}</h4>
                         <p class="list-group-item-text">{{ $repo['description'] }}</p>
-                        <p class="list-group-item-text">{{ $repo['created_at'] }}</p>
+                        <p class="list-group-item-text">{{ date('d M Y H:i:s',strtotime($repo['created_at'])) }}</p>
                     </a>
                 @endforeach
             </div>
         @else
-            No results found with the Github username.
+            No repositories found with the Github username.
         @endif
     @endif
 @stop
