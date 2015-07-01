@@ -38,6 +38,7 @@ DB_USERNAME=root
 
 DB_PASSWORD=''
 
+(The default password is empty. So the two single quotation marks mean empty)
 Here 'github' is the name of the database (you can give any other name as you like).
 DB_USERNAME and DB_PASSWORD are the environmental variables which represent your database username and password respectively. Generally, the values which I have given above automatically hold true in your case too since these are  default for xampp server. If you have some other username and password, please change these environmental variables accordingly.
 
@@ -85,6 +86,12 @@ As I have previously said, there is no need to manually dowmload any modules or 
 *  '/github/user/repos/search' : Displays a form where you can submit the github user name and get all his repositories.
 *  '/github/search_history' : Displays the previously made searches of  a logged in user. 
 
+So, for example, if you are on the '/github/search_history' route, the url in the browser will  be
+
+localhost/{folder-path}/{folder-name}/public/github/search_history
+
+where {folder-name} and {folder-path} have same meanings as explained previously.
+
 ##Tables
 1.'github_users' table:
 This table stores the names and information about the gihub users who are searched by the user (both registered and unregistered users) in 10 columns.
@@ -102,10 +109,10 @@ A user of this website can search many repositories and a repository can be sear
 This pivot table establishes the many to many relationship between the website users and github users searched by them.It has foreign keys 'user_id' and 'github_user_id' to display previously searched github users by a logged in user.
 
 6.'github_languages_statistics' table:
-This table stores the languages and no of users.
+This table stores the languages and no of repositories in that language.
 
 **Note**:
-I didn't set up any OAuth between github and my app. This is because I personally felt that by setting up an OAuth, the persons checking this project must register this app in github website and provide their client-id and secret which is little difficult. Actually, the github-search-api rate limit for unauthorized api requests is 10/minute while it is just 30/minute even for authorised requests. I took all possible precautions not to exceed both the github-search-api rate limit as well as the maximum execution time of server (30 seconds). But if the execution time exceeds 30 seconds due to slow internet or some other reason, I recommend to change its value to 60 in the php.ini file in your server. 
+I didn't set up any OAuth between github and my app. This is because I personally felt that by setting up an OAuth, the persons checking this project must register this app in github website and provide their client-id and secret which is little difficult. Actually, the github-search-api rate limit for unauthorized api requests is 10/minute while it is just 30/minute even for authorised requests. I took all possible precautions not to exceed both the github-search-api rate limit as well as the maximum execution time of server (30 seconds). But if the execution time exceeds 30 seconds due to slow internet or some other reason, I recommend to change its value to 60 in the php.ini file in your server. Also, please wait for a few seconds and make your request again, if you encounter 'exceeded-rate-limit' error (there is very less probability of encountering this error).
 
 ##SCREENSHOTS
 ![welcome page](/screenshots/welcome.png)
